@@ -1,2 +1,6 @@
 image:
   file: .gitpod.dockerfile
+
+ports:
+  - port: 5432
+    visibility: public

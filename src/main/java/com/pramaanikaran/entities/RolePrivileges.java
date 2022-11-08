@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +17,8 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class Privilege {
+@Table(name = "role_privileges")
+public class RolePrivileges {
  
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,5 +27,5 @@ public class Privilege {
     private String name;
 
     @ManyToMany(mappedBy = "privileges")
-    private Collection<Role> roles;
+    private Collection<UserRoles> roles;
 }

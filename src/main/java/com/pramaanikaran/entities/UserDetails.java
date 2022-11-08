@@ -9,18 +9,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.JoinColumn;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.JoinColumn;
-
 @Entity
 @Setter
 @Getter
 @Builder
-public class User {
+@Table(name = "user_details")
+public class UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -31,15 +35,19 @@ public class User {
     private String password;
     private boolean enabled;
     private boolean tokenExpired;
+
+    @CreationTimestamp
     private Instant createdOn;
+
+    @UpdateTimestamp
     private Instant lastUpdatedOn;
 
     @ManyToMany 
     @JoinTable( 
-        name = "users_roles", 
+        name = "user_roles", 
         joinColumns = @JoinColumn(
           name = "user_id", referencedColumnName = "id"), 
         inverseJoinColumns = @JoinColumn(
           name = "role_id", referencedColumnName = "id")) 
-    private Collection<Role> roles;
+    private Collection<UserRoles> roles;
 }

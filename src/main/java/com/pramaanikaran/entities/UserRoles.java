@@ -8,6 +8,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import javax.persistence.JoinColumn;
 
 import lombok.Builder;
@@ -18,21 +19,22 @@ import lombok.Setter;
 @Setter
 @Getter
 @Builder
-public class Role {
+@Table(name = "user_roles")
+public class UserRoles {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private String name;
     @ManyToMany(mappedBy = "roles")
-    private Collection<User> users;
+    private Collection<UserDetails> users;
 
     @ManyToMany
     @JoinTable(
-        name = "roles_privileges", 
+        name = "role_privileges", 
         joinColumns = @JoinColumn(
           name = "role_id", referencedColumnName = "id"), 
         inverseJoinColumns = @JoinColumn(
           name = "privilege_id", referencedColumnName = "id"))
-    private Collection<Privilege> privileges;
+    private Collection<RolePrivileges> privileges;
 }
