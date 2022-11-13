@@ -11,10 +11,10 @@ services:
       dockerfile: Dockerfile
     environment:
       # NOTE: POSTGRES_DB/USER/PASSWORD should match values in db container
-        POSTGRES_PASSWORD: admin
-        POSTGRES_USER: admin
-        POSTGRES_DB: granthaalay
-        POSTGRES_HOSTNAME: postgresdb
+        POSTGRES_PASSWORD: granthaalay
+        POSTGRES_USER: granthaalay
+        POSTGRES_DB: granthaalaydb
+        POSTGRES_HOSTNAME: granthaalayhost
 
     volumes:
       - ../..:/workspaces:cached
@@ -25,6 +25,9 @@ services:
     # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
     network_mode: service:db
 
+    ports:
+      - 8080:8080
+
     # Uncomment the next line to use a non-root user for all processes.
     # user: vscode
 
@@ -32,16 +35,19 @@ services:
     # (Adding the "ports" property to this file will not forward from a Codespace.)
 
   db:
-    container_name: postgresdb
-    image: postgres:latest
+    container_name: granthaalaydb
+    image: postgres:14.1-alpine
     restart: unless-stopped
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
       # NOTE: POSTGRES_DB/USER/PASSWORD should match values in app container
-      POSTGRES_PASSWORD: admin
-      POSTGRES_USER: admin
-      POSTGRES_DB: granthaalay
+      POSTGRES_PASSWORD: granthaalay
+      POSTGRES_USER: granthaalay
+      POSTGRES_DB: granthaalaydb
+
+    ports:
+      - 5432:5432
 
     # Add "forwardPorts": ["5432"] to **devcontainer.json** to forward PostgreSQL locally.
     # (Adding the "ports" property to this file will not forward from a Codespace.)
