@@ -1,11 +1,11 @@
 spring:
-  security:
-    user:
-      password: password
+  # security:
+  #   user:
+  #     password: password
   datasource:
-    url: jdbc:postgresql://localhost:5432/granthaalay
-    username: admin
-    password: admin
+    url: jdbc:postgresql://localhost:5432/granthaalaydb
+    username: granthaalay
+    password: granthaalay
   jpa:
     show-sql: true
     properties:
