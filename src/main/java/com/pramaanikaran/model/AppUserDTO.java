@@ -17,7 +17,5 @@ public class AppUserDTO {
     private String firstName;
     private String lastName;
     private String email;
-
-    @JsonIgnore
     private String password;
 }

@@ -10,13 +10,16 @@ import com.pramaanikaran.entity.AppUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 
-
 @Builder
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails{
 
     private AppUser user;
     private Collection<? extends GrantedAuthority> authorities;
+
+    public Long getId() {
+        return user.getId();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
