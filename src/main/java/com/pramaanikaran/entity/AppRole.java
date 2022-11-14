@@ -1,18 +1,15 @@
 package com.pramaanikaran.entity;
 
 import java.time.Instant;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 
 import lombok.AllArgsConstructor;
@@ -22,34 +19,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
+@Builder
 @Setter
 @Getter
-@Builder
-@Table(name = "users")
-public class AppUser {
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "user_roles")
+public class AppRole {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-
-    String firstName;
-    String lastName;
+    private Long id;
 
     @Column(unique = true)
-    String email;
-    
-    String password;
+    private String name;
 
     @CreationTimestamp
-    Instant createdOn;
-
-    @UpdateTimestamp
-    Instant updatedOn;
+    private Instant createdOn;
 
     @CreatedBy
     private String createdBy;
-
-    @ManyToMany
-    Set<AppRole> roles;
 }
