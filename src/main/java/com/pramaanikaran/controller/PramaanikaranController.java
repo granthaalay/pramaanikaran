@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -57,9 +57,8 @@ public class PramaanikaranController {
     @PostMapping("/signin")
     // @PermitAll
     public ResponseEntity<?> signin(@RequestBody Map<String, String> credentials) {
-        Authentication authentication =
-                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                        credentials.get("username"), credentials.get("password")));
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+                credentials.get("username"), credentials.get("password")));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwtToken = jwtUtils.generateJwtToken(authentication);
@@ -126,6 +125,7 @@ public class PramaanikaranController {
         return ResponseEntity.ok().body("Role %s added to user %s".formatted(roleName, email));
     }
 
+    @PreAuthorize("hasPermission('ADMIN_SUPERADMIN')")
     @PostMapping("/addrole")
     public ResponseEntity<AppRoleDTO> addRole(@RequestBody AppRoleDTO role) {
         log.info("creating new role %s".formatted(role.getName()));
