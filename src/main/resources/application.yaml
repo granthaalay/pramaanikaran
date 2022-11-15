@@ -2,6 +2,10 @@ spring:
   # security:
   #   user:
   #     password: password
+  app:
+    jwt:
+      validity: 86400000
+      secret: pramaanikaran_key
   datasource:
     url: jdbc:postgresql://localhost:5432/granthaalaydb
     username: granthaalay
