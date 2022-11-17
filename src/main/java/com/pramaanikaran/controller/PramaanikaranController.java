@@ -55,7 +55,6 @@ public class PramaanikaranController {
     JwtUtils jwtUtils;
 
     @PostMapping("/signin")
-    // @PermitAll
     public ResponseEntity<?> signin(@RequestBody Map<String, String> credentials) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 credentials.get("username"), credentials.get("password")));
@@ -88,6 +87,7 @@ public class PramaanikaranController {
                         .lastName(createdUser.getLastName()).email(createdUser.getEmail()).build());
     }
 
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN')")
     @GetMapping("/users")
     // @PreAuthorize("hasPermission('ROLE_SUPERADMIN')")
     public ResponseEntity<List<AppUserDTO>> getUsers() {
@@ -100,6 +100,7 @@ public class PramaanikaranController {
         return ResponseEntity.ok().body(usersDto);
     }
 
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN')")
     @PostMapping("/user/addrole")
     public ResponseEntity<String> addRoleToUser(String email, String roleName) {
         // fetch user and role
@@ -125,7 +126,7 @@ public class PramaanikaranController {
         return ResponseEntity.ok().body("Role %s added to user %s".formatted(roleName, email));
     }
 
-    @PreAuthorize("hasPermission('ADMIN_SUPERADMIN')")
+    @PreAuthorize("hasRole('ROLE_SUPERADMIN')")
     @PostMapping("/addrole")
     public ResponseEntity<AppRoleDTO> addRole(@RequestBody AppRoleDTO role) {
         log.info("creating new role %s".formatted(role.getName()));
