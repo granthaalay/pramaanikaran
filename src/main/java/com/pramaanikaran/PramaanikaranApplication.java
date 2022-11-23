@@ -13,6 +13,7 @@ import com.pramaanikaran.entity.AppRole;
 import com.pramaanikaran.entity.AppUser;
 import com.pramaanikaran.repository.AppRoleRepository;
 import com.pramaanikaran.repository.AppUserRepository;
+import static com.pramaanikaran.constants.RoleConstants.*;
 
 @SpringBootApplication
 public class PramaanikaranApplication {
@@ -27,7 +28,7 @@ public class PramaanikaranApplication {
 	@Bean
 	CommandLineRunner run(AppUserRepository userRepository, AppRoleRepository roleRepository) {
 		return args -> {
-			AppRole role = roleRepository.save(AppRole.builder().name("ROLE_SUPERADMIN").build());
+			AppRole role = roleRepository.save(AppRole.builder().name(ROLE_SUPERADMIN).build());
 			userRepository.save(AppUser.builder()
 					.firstName("John")
 					.lastName("Wick")
@@ -40,7 +41,7 @@ public class PramaanikaranApplication {
 					.roles(Set.of(role))
 					.build());
 
-			role = roleRepository.save(AppRole.builder().name("ROLE_STUDENT").build());
+			role = roleRepository.save(AppRole.builder().name(ROLE_STUDENT).build());
 			userRepository.save(AppUser.builder()
 					.firstName("Mahendra")
 					.lastName("Bahubali")

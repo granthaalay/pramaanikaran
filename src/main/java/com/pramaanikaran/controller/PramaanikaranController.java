@@ -30,6 +30,7 @@ import com.pramaanikaran.repository.AppRoleRepository;
 import com.pramaanikaran.repository.AppUserRepository;
 import com.pramaanikaran.security.service.UserDetailsImpl;
 import com.pramaanikaran.security.util.JwtUtils;
+import static com.pramaanikaran.constants.RoleConstants.*;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -76,18 +77,32 @@ public class PramaanikaranController {
     public ResponseEntity<AppUserDTO> signUp(AppUserDTO user) {
         log.info("adding new user with email " + user.getEmail());
 
-        AppUser userEntity = AppUser.builder().firstName(user.getFirstName())
-                .lastName(user.getLastName()).email(user.getEmail())
-                .password(passwordEncoder.encode(user.getPassword())).build();
+        // add role ROLE_NEWUSER to user
+        AppRole role = roleRepository.getRoleByName(ROLE_NEW_USER);
+        if(role == null) {
+            log.info("{} does not exist in DB. Creating role.", ROLE_NEW_USER);
+            role = roleRepository.save(AppRole.builder()
+                                        .name(ROLE_NEW_USER)
+                                        .build());
+        }
+
+        AppUser userEntity = AppUser.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .password(passwordEncoder.encode(user.getPassword()))
+                .roles(Set.of(role))
+                .build();
 
         AppUser createdUser = userRepository.save(userEntity);
+        log.info("Created new user with email {}", userEntity.getEmail());
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(AppUserDTO.builder().firstName(createdUser.getFirstName())
                         .lastName(createdUser.getLastName()).email(createdUser.getEmail()).build());
     }
 
-    @PreAuthorize("hasRole('ROLE_SUPERADMIN')")
+    @PreAuthorize("hasRole(ROLE_SUPERADMIN)")
     @GetMapping("/users")
     // @PreAuthorize("hasPermission('ROLE_SUPERADMIN')")
     public ResponseEntity<List<AppUserDTO>> getUsers() {
@@ -100,7 +115,7 @@ public class PramaanikaranController {
         return ResponseEntity.ok().body(usersDto);
     }
 
-    @PreAuthorize("hasRole('ROLE_SUPERADMIN')")
+    @PreAuthorize("hasRole(ROLE_SUPERADMIN)")
     @PostMapping("/user/addrole")
     public ResponseEntity<String> addRoleToUser(String email, String roleName) {
         // fetch user and role
@@ -126,7 +141,7 @@ public class PramaanikaranController {
         return ResponseEntity.ok().body("Role %s added to user %s".formatted(roleName, email));
     }
 
-    @PreAuthorize("hasRole('ROLE_SUPERADMIN')")
+    @PreAuthorize("hasRole(ROLE_SUPERADMIN)")
     @PostMapping("/addrole")
     public ResponseEntity<AppRoleDTO> addRole(@RequestBody AppRoleDTO role) {
         log.info("creating new role %s".formatted(role.getName()));
